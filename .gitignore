@@ -4,6 +4,7 @@
 
 # ignore 
 /models
+/ignore
 ### macOS ###
 # General
 .DS_Store
