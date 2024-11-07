@@ -15,7 +15,8 @@ from .BaseEmbedderTrainer import BaseEmbedderTrainer
 from .BaseModeling import BaseEmbedderModel
 from .BaseDataset import (
     BaseEmbedderCollator,
-    BaseEmbedderTrainDataset
+    BaseEmbedderTrainDataset,
+    BaseEmbedderEvalDataset
 )
 
 logger = logging.getLogger(__name__)
@@ -60,7 +61,7 @@ class BaseEmbedderRunner(ABC):
         logger.info("Data parameters %s", data_args)
         
         self.tokenizer, self.model = self.load_tokenizer_and_model()
-        self.train_dataset = self.load_train_dataset()
+        self.train_dataset, self.eval_dataset= self.load_train_dataset()
         self.data_collator = self.load_data_collator()
         self.trainer = self.load_trainer()
         
@@ -74,10 +75,22 @@ class BaseEmbedderRunner(ABC):
     
     def load_train_dataset(self) -> BaseEmbedderTrainDataset:
         train_dataset = BaseEmbedderTrainDataset(
-            data_args=self.data_args,
+            args=self.data_args,
             tokenizer=self.tokenizer
         )
-        return train_dataset
+        
+        if self.data_args.test_data:
+            test_dataset = BaseEmbedderEvalDataset(
+                args=self.data_args,
+                tokenizer=self.tokenizer
+            )
+            logger.info(f"Test dataset size: {len(test_dataset)}")
+        else:
+            test_dataset = None
+            logger.info("No test dataset provided")
+        
+        
+        return train_dataset, test_dataset
     
     def load_data_collator(self) -> BaseEmbedderCollator:
         data_collator = BaseEmbedderCollator(

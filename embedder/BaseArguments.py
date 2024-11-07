@@ -17,6 +17,11 @@ class BaseEmbeddingDataArguments:
         metadata={"help": "The input training data file (a text file)."},
     )
     
+    test_data: Optional[str] = field(
+        default=None,
+        metadata={"help": "The input test data file (a text file)."},
+    )
+    
     cache_path: Optional[str] = field(
         default=None,
         metadata={"help": "The path to the cache directory."},

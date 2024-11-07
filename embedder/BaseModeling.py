@@ -56,16 +56,24 @@ class BaseEmbedderModel(ABC, nn.Module):
     ):
         q_reps = self.encode(queries) # (batch_size, dim)
         p_reps = self.encode(passages) # (batch_size * group_size, dim)
-
-        if self.training:
-            scores, loss = self._compute_in_batch_neg_loss(q_reps, p_reps)
-        else:
-            loss = None
+        scores, loss = self._compute_in_batch_neg_loss(q_reps, p_reps)
+        
+        # if self.training:
+        #     scores, loss = self._compute_in_batch_neg_loss(q_reps, p_reps)
+        # else:
+        #     loss = None
         return EmbedderOutput(
             loss=loss,
         )
           
     def _compute_in_batch_neg_loss(self, q_reps, p_reps):
+        """
+        group_size = 8
+        batch_size = 4
+        idx = [0, 1, 2, 3]
+        target = [0, 8, 16, 24] 代表每個query的正向passage的index
+        
+        """
         group_size = p_reps.size(0) // q_reps.size(0)
         scores = self.compute_score(q_reps, p_reps) # (batch_size, group_size)
         idx = torch.arange(q_reps.size(0), device=q_reps.device, dtype=torch.long)
