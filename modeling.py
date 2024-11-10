@@ -47,8 +47,8 @@ class BiEncoderOnlyEmbedderModel(BaseEmbedderModel):
         
     def _compute_similarity(self, q_reps, p_reps):
         if len(q_reps.size()) == 2:
-            return torch.matmul(q_reps, p_reps.transpose(0, 1))
-        return torch.matmul(q_reps, p_reps.transpose(-2, -1))
+            return torch.matmul(q_reps, p_reps.transpose(0, 1)) 
+        return torch.matmul(q_reps, p_reps.transpose(-2, -1)) 
     
     def compute_score(self, q_reps, p_reps):
         scores = self._compute_similarity(q_reps, p_reps) / self.temperature

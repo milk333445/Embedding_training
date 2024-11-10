@@ -54,14 +54,13 @@ class BaseEmbedderModel(ABC, nn.Module):
         passages: Union[Dict[str, Tensor], List[Dict[str, Tensor]]] = None,
 
     ):
-        q_reps = self.encode(queries) # (batch_size, dim)
-        p_reps = self.encode(passages) # (batch_size * group_size, dim)
-        scores, loss = self._compute_in_batch_neg_loss(q_reps, p_reps)
+        q_reps = self.encode(queries) 
+        p_reps = self.encode(passages) 
         
-        # if self.training:
-        #     scores, loss = self._compute_in_batch_neg_loss(q_reps, p_reps)
-        # else:
-        #     loss = None
+        if self.training:
+            scores, loss = self._compute_in_batch_neg_loss(q_reps, p_reps)
+        else:
+            loss = None
         return EmbedderOutput(
             loss=loss,
         )

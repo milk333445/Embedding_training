@@ -1,7 +1,6 @@
 CUDA_VISIBLE_DEVICES=0 python main.py \
-    --model_name_or_path models/m3e-base \
-    --train_data dataset/train_dataset.json \
-    --test_data dataset/test_dataset.json \
+    --model_name_or_path bge-large-zh-v1.5 \
+    --train_data data \
     --cache_path cache_data \
     --output_dir output \
     --learning_rate 1e-5 \
@@ -13,8 +12,6 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
     --query_max_len 64 \
     --passage_max_len 256 \
     --save_strategy steps \
-    --evaluation_strategy steps \
-    --eval_steps 10 \
     --save_steps 10000 \
     --save_total_limit 3 \
     --temperature 0.02 \
